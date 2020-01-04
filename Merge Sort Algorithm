@@ -1,0 +1,138 @@
+/*
+ * Program: mergesort.c --- Merge sort Algorithm 
+ * Author: Savitha Munirajaiah
+ * Date: 4th January, 2020
+*/
+
+#include<stdio.h>
+#define SIZE 10
+void merge(int arr[], int start, int mid, int end);
+int mergesort(int arr[], int start, int end);
+void display(int arr[], int count);
+    
+int main(void)
+{
+    int arr[SIZE] = {5,2,3,3,19,6,8,96,33,23}; 
+    int start, end, mid;
+    start = 0;
+    end = SIZE - 1;    
+    mid = (start + end) / 2;
+   
+    //Left half
+    mergesort(arr, start, mid);
+    
+    //Right half
+    mergesort(arr, mid + 1, end);
+    
+    // Merge the arrays
+    merge(arr, start, mid, end);        
+}
+
+int mergesort(int arr[], int start, int end)
+{ 
+    if(start < end)
+    {  
+        int mid = (start + end)/ 2;
+        mergesort(arr, start, mid);
+        mergesort(arr, mid + 1, end);
+        merge(arr, start, mid, end);   
+    }    
+    return 0;
+}
+
+void merge(int arr[], int start, int mid, int end)
+{
+    // Variables n1 and n2 define the size of the temporary arrays left[] and right[]
+    int n1 = (mid - start) + 1;
+    int n2 = end - mid;
+    
+    // Creat temporary arrays
+    int left[n1];
+    int right[n2];
+    
+    // Temporary array for merging; variable 'pos' used to navigate through the array arrf[]
+    int arrf[SIZE];
+    int pos = start;
+    
+    // Copy data to subarrays - left[] and right[]
+    for(int i = 0; i < n1; i++, pos++)
+    {
+        left[i] = arr[pos];
+    }
+    //printf("Left array: ");
+    display(left, n1 - 1);
+    
+    for(int j = 0; j < n2; j++, pos++)
+    {
+        right[j] = arr[pos];
+    }
+    //printf("Right array: ");
+    display(right, n2 - 1);
+    
+    // Sort and Merge data from two subarrays into single array - arrf[end]
+    
+    // i, j, k are the counters used to navigate through the array
+    int i = 0, j = 0, k = 0;
+    
+    // When counters of both left and right side of the array is in the range,
+    // sort and merge the elements into arrf[]
+    while(i < n1 && j < n2)
+    {
+        if(left[i] > right[j])
+        {
+            arrf[k] = right[j];
+            k++;
+            j++;
+        }
+        else
+        {
+            arrf[k] = left[i];
+            k++;
+            i++;
+        }
+    }
+
+    // when all the elements in the leftside of the array is copied
+    if(i >= n1)
+    {
+        // Copy any elements pending on the rightside of the array 
+        while(j < n2)
+        {  
+            arrf[k] = right[j];
+            k++;
+            j++;
+        }
+    }
+    
+    // When all the elements in the right array is copied
+    if(j >= n2)
+    {
+        //copy the elements pending on the leftside of the array
+        while(i < n1)
+        {
+            arrf[k] = left[i];
+            k++;
+            i++;
+        }
+    }   
+    // Copy to the main array arr[]
+    // s -> used to navigate through temp array arrf[]
+    // start is used to navigate through main array arr[]
+    for(int s = 0; s <= end && start <= end; s++,start++)
+    {
+        arr[start] = arrf[s];
+    }   
+    printf("end of merge: ");
+    display(arrf,k-1);   
+}
+void display(int arr[], int count)
+{
+    for(int i = 0; i <=count; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+
+
